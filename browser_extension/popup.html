@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>playlist</title>
+    <style>
+      :root {
+        --mpv_main_bg: #45194d;
+        --mpv_main_bgd: #35103b;
+        --mpv_main_fg: #bcb7be;
+      }
+      body {
+        min-width: 20rem;
+        text-align: center;
+      }
+      button#hi_btn {
+        margin: 5px;
+        background-color: var(--mpv_main_bg);
+        color: var(--mpv_main_fg);
+        border: unset;
+      }
+      button#hi_btn:hover {
+        background-color: var(--mpv_main_bgd);
+      }
+    </style>
+  </head>
+  <body>
+    <button id="hi_btn" value="1">say hi!</button>
+    <script src="popup.js"></script>
+  </body>
+</html>

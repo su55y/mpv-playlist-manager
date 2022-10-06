@@ -1,0 +1,20 @@
+{
+  "name": "MPV playlist manager",
+  "description": "Provides context menu option to send video link to mpv playlist",
+  "version": "0.1.1",
+  "manifest_version": 3,
+  "permissions": ["notifications", "contextMenus"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "current playlist",
+    "default_popup": "popup.html"
+  },
+  "icons": {
+    "16": "icons/mpv16.png",
+    "32": "icons/mpv48.png",
+    "48": "icons/mpv48.png",
+    "128": "icons/mpv128.png"
+  }
+}
