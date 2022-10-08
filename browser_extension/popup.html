@@ -6,25 +6,61 @@
       :root {
         --mpv_main_bg: #45194d;
         --mpv_main_bgd: #35103b;
+        --mpv_main_bgd10: #35103b10;
+        --mpv_main_bgd50: #35103ba0;
         --mpv_main_fg: #bcb7be;
       }
       body {
-        min-width: 20rem;
-        text-align: center;
+        min-width: 20em;
+        max-width: 30em;
       }
-      button#hi_btn {
+      div.pl_popup_top,
+      div#playlist,
+      div.pl_item,
+      div.pl_item_title,
+      div.pl_item_thumb {
+        display: flex;
+        margin: 0;
+      }
+      div#playlist {
+        flex-direction: column;
+        margin: 10px 0;
+        padding: 0 10px;
+      }
+      div.pl_item {
+        align-items: center;
+        justify-content: flex-start;
+        flex-direction: row;
+        overflow: hidden;
+        margin-bottom: 10px;
+        background-color: var(--mpv_main_bgd10);
+      }
+      div.pl_item:hover {
+        cursor: pointer;
+        background-color: var(--mpv_main_bgd50);
+      }
+      div.pl_item_current {
+        border-right: 5px solid var(--mpv_main_bg);
+      }
+      div.pl_item_title {
+        display: block;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        padding: 10px;
+        font-size: 14pt;
+      }
+      button#upd_btn {
         margin: 5px;
-        background-color: var(--mpv_main_bg);
-        color: var(--mpv_main_fg);
-        border: unset;
-      }
-      button#hi_btn:hover {
-        background-color: var(--mpv_main_bgd);
+        font-size: 10pt;
       }
     </style>
   </head>
   <body>
-    <button id="hi_btn" value="1">say hi!</button>
+    <div class="pl_popup_top">
+      <button id="upd_btn" value="1">update</button>
+    </div>
+    <div id="playlist"></div>
     <script src="popup.js"></script>
   </body>
 </html>

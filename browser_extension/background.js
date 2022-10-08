@@ -36,7 +36,7 @@ const notifySend = (message, icon) => {
 }
 
 const appendVideo = async (u) => {
-  const response = await fetch(`${APPEND_URL}${u}`)
+  const response = await fetch(`${APPEND_URL}${encodeURIComponent(u)}`)
   const result = await response.json()
   console.log(result)
 }
