@@ -38,7 +38,7 @@ const notifySend = (message, icon) => {
 const appendVideo = async (u) => {
   const response = await fetch(`${APPEND_URL}${encodeURIComponent(u)}`)
   const result = await response.json()
-  console.log(result)
+  return result?.error === 'success'
 }
 
 const parseUrl = (url) => {
@@ -51,7 +51,7 @@ const parseUrl = (url) => {
       console.log(msg)
       return { url, msg, icon, ok: false }
     }
-    msg = 'added video'
+    msg = `${url} video just added`
     console.log(msg)
     return { url: res[0], msg, icon, ok: true }
   }
@@ -62,10 +62,12 @@ const parseUrl = (url) => {
 const onClickContextMenu = (info) => {
   const { pageUrl, linkUrl } = info
   const { url, msg, icon, ok } = parseUrl(linkUrl || pageUrl)
-  if (!url || !ok) return
-  notifySend(msg, icon)
+  if (!url || !ok) {
+    notifySend(msg, icon)
+    return
+  }
   console.log(`send ${url}`)
-  appendVideo(url)
+  if (appendVideo(url)) notifySend(msg, icon)
 }
 
 ;['page', 'link'].forEach((e, i) => {

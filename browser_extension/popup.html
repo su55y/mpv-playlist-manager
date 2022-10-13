@@ -18,7 +18,8 @@
       div#playlist,
       div.pl_item,
       div.pl_item_title,
-      div.pl_item_thumb {
+      div.pl_item_thumb,
+      div.pl_item_buttons {
         display: flex;
         margin: 0;
       }
@@ -50,15 +51,46 @@
         padding: 10px;
         font-size: 14pt;
       }
-      button#upd_btn {
+      button#upd_btn,
+      button.control_button {
         margin: 5px;
         font-size: 10pt;
+      }
+      div.pl_item_buttons {
+        flex-direction: row;
+        padding: 0;
+      }
+      div.pl_item_buttons,
+      div.pl_item_buttons button {
+        background: #00000000;
+        color: #000000a1;
+      }
+      .remove_button,
+      .play_button {
+        height: 60px;
+        width: 30px;
+        border: unset;
+        font-size: 20pt;
+        transition: all 0.1s ease-in;
+      }
+      .remove_button:hover {
+        background-color: #d00;
+        color: #000;
+      }
+      .play_button:hover {
+        background-color: #0d0;
+        color: #000;
       }
     </style>
   </head>
   <body>
     <div class="pl_popup_top">
       <button id="upd_btn" value="1">update</button>
+      <button id="prev_btn" value="prev" class="control_button">prev</button>
+      <button id="pause_btn" value="pause" class="control_button">
+        play/pause
+      </button>
+      <button id="next_btn" value="next" class="control_button">next</button>
     </div>
     <div id="playlist"></div>
     <script src="popup.js"></script>
