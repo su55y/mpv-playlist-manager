@@ -2,13 +2,16 @@
 const HEALTHZ_URL = 'http://localhost:5000/healthz',
   PLAYLIST_URL = 'http://localhost:5000/playlist',
   CONTROL_URL = 'http://localhost:5000/control?action=',
+  PLAY_INDEX_URL = 'http://localhost:5000/play?index=',
   controlButtons = document.getElementsByClassName('control_button'),
-  updButton = document.getElementById('upd_btn')
+  updButton = document.getElementById('upd_btn'),
+  OK = 'success'
 
 const refreshList = (playlist) => {
   if (playlist) {
     let playlistElement = document.createElement('div')
-    for (const v of playlist) {
+    let btns = []
+    for (const [i, v] of playlist.entries()) {
       console.log(v)
       let el = document.createElement('div')
       el.className = 'pl_item'
@@ -32,9 +35,11 @@ const refreshList = (playlist) => {
       removeBtn.id = v.id
       removeBtn.className = 'remove_button'
       removeBtn.innerHTML = '\uf00d'
-      if (!v.playing) {
+      if (!v.current) {
         let playBtn = document.createElement('button')
-        playBtn.id = v.id
+        playBtn.id = 'play' + i
+        playBtn.value = i
+        btns.push(`play${i}`)
         playBtn.className = 'play_button'
         playBtn.innerHTML = '\uf04b'
         buttonsCont.appendChild(playBtn)
@@ -45,9 +50,21 @@ const refreshList = (playlist) => {
       playlistElement.appendChild(el)
     }
     document.getElementById('playlist').innerHTML = playlistElement.innerHTML
+    for (const b of btns)
+      document.getElementById(b).addEventListener('click', playIndex)
   }
   updButton.disabled = false
 }
+
+const playIndex = async (e) => {
+  e.target.disabled = true
+  await fetch(`${PLAY_INDEX_URL}${e.target.value}`)
+    .then((r) => r.json())
+    .then((r) => {
+      if (r.error === OK) refreshPlaylist()
+    })
+}
+
 const refreshPlaylist = async () => {
   updButton.disabled = true
   await fetch(PLAYLIST_URL)
@@ -61,7 +78,7 @@ const control = async (e) => {
   await fetch(`${CONTROL_URL}${e.target.value}`)
     .then((r) => r.json())
     .then((r) => {
-      if (r.error === 'success') console.log('success')
+      if (r.error === OK) refreshPlaylist()
       for (const b of controlButtons) b.disabled = false
     })
 }
