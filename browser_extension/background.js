@@ -1,7 +1,8 @@
 'use strict'
 const TITLE = 'Add to MPV',
+  PORT = '5000',
   TUTORIAL = 'https://youtu.be/dQw4w9WgXcQ',
-  APPEND_URL = 'http://localhost:5000/req?u=',
+  APPEND_URL = `http://localhost:${PORT}/req?u=`,
   YOUTUBE_ICON = 'icons/yt48.png',
   TWITCH_ICON = 'icons/tw48.png',
   MPV_ICON = 'icons/mpv48.png',

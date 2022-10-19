@@ -1,8 +1,9 @@
 'use strict'
-const HEALTHZ_URL = 'http://localhost:5000/healthz',
-  PLAYLIST_URL = 'http://localhost:5000/playlist',
-  CONTROL_URL = 'http://localhost:5000/control?action=',
-  PLAY_INDEX_URL = 'http://localhost:5000/play?index=',
+const PORT = '5000',
+  HEALTHZ_URL = `http://localhost:${PORT}/healthz`,
+  PLAYLIST_URL = `http://localhost:${PORT}/playlist`,
+  CONTROL_URL = `http://localhost:${PORT}/control?action=`,
+  PLAY_INDEX_URL = `http://localhost:${PORT}/play?index=`,
   controlButtons = document.getElementsByClassName('control_button'),
   updButton = document.getElementById('upd_btn'),
   OK = 'success'
