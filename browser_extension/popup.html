@@ -2,95 +2,38 @@
 <html>
   <head>
     <title>playlist</title>
-    <style>
-      :root {
-        --mpv_main_bg: #45194d;
-        --mpv_main_bgd: #35103b;
-        --mpv_main_bgd10: #35103b10;
-        --mpv_main_bgd50: #35103ba0;
-        --mpv_main_fg: #bcb7be;
-      }
-      body {
-        min-width: 20em;
-        max-width: 30em;
-      }
-      div.pl_popup_top,
-      div#playlist,
-      div.pl_item,
-      div.pl_item_title,
-      div.pl_item_thumb,
-      div.pl_item_buttons {
-        display: flex;
-        margin: 0;
-      }
-      div#playlist {
-        flex-direction: column;
-        margin: 10px 0;
-        padding: 0 10px;
-      }
-      div.pl_item {
-        align-items: center;
-        justify-content: flex-start;
-        flex-direction: row;
-        overflow: hidden;
-        margin-bottom: 10px;
-        background-color: var(--mpv_main_bgd10);
-      }
-      div.pl_item:hover {
-        cursor: pointer;
-        background-color: var(--mpv_main_bgd50);
-      }
-      div.pl_item_current {
-        border-right: 5px solid var(--mpv_main_bg);
-      }
-      div.pl_item_title {
-        display: block;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        white-space: nowrap;
-        padding: 10px;
-        font-size: 14pt;
-      }
-      button#upd_btn,
-      button.control_button {
-        margin: 5px;
-        font-size: 10pt;
-      }
-      div.pl_item_buttons {
-        flex-direction: row;
-        padding: 0;
-      }
-      div.pl_item_buttons,
-      div.pl_item_buttons button {
-        background: #00000000;
-        color: #000000a1;
-      }
-      .remove_button,
-      .play_button {
-        height: 60px;
-        width: 30px;
-        border: unset;
-        font-size: 20pt;
-        transition: all 0.1s ease-in;
-      }
-      .remove_button:hover {
-        background-color: #d00;
-        color: #000;
-      }
-      .play_button:hover {
-        background-color: #0d0;
-        color: #000;
-      }
-    </style>
+    <link rel="stylesheet" href="popup.css" />
   </head>
   <body>
     <div class="pl_popup_top">
-      <button id="upd_btn" value="1">update</button>
-      <button id="prev_btn" value="prev" class="control_button">prev</button>
-      <button id="pause_btn" value="pause" class="control_button">
-        play/pause
+      <button id="upd_btn">
+        <svg viewBox="-2 -2 25 25" width="50" height="50" style="stroke: #000">
+          <polygon points="0,-0.5 9,-1.5 7.5,8" />
+          <path
+            d="M10.5.5A10,10,0,1,1,5.56,1.8"
+            style="fill: none; stroke-width: 5"
+          />
+        </svg>
       </button>
-      <button id="next_btn" value="next" class="control_button">next</button>
+      <button id="prev" class="control_button">
+        <svg width="50" height="50">
+          <polygon points="50,0 30,25 50,50" />
+          <polygon points="30,0 10,25 30,50" />
+          <rect x="0" y="0" width="10" height="50" />
+        </svg>
+      </button>
+      <button id="pause" class="control_button">
+        <svg height="50" width="50">
+          <polygon points="15,0 50,25 15,50" />
+        </svg>
+      </button>
+      <button id="next" class="control_button">
+        <svg width="50" height="50">
+          <polygon points="0,0 20,25 0,50" />
+          <polygon points="20,0 40,25 20,50" />
+          <rect x="40" y="0" width="10" height="50" />
+        </svg>
+      </button>
     </div>
     <div id="playlist"></div>
     <script src="popup.js"></script>

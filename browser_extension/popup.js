@@ -6,7 +6,11 @@ const PORT = '5000',
   PLAY_INDEX_URL = `http://localhost:${PORT}/play?index=`,
   controlButtons = document.getElementsByClassName('control_button'),
   updButton = document.getElementById('upd_btn'),
-  OK = 'success'
+  OK = 'success',
+  CROSS_SVG = `<svg viewBox="0 0 10 10" width="15" height="15">
+  <polygon points="0,1 1,0 10,9 9,10" />
+  <polygon points="0,9 1,10 10,1 9,0" />
+</svg>`
 
 const refreshList = (playlist) => {
   if (playlist) {
@@ -30,24 +34,22 @@ const refreshList = (playlist) => {
         thumbCont.appendChild(thumb)
         el.appendChild(thumbCont)
       }
+      if (!v.current) {
+        const id = `play${i}`
+        title.id = id
+        btns.push(id)
+        title.setAttribute('data-index', i)
+      }
+      el.appendChild(title)
       let buttonsCont = document.createElement('div')
       buttonsCont.className = 'pl_item_buttons'
       let removeBtn = document.createElement('button')
       removeBtn.id = v.id
       removeBtn.className = 'remove_button'
-      removeBtn.innerHTML = '\uf00d'
-      if (!v.current) {
-        let playBtn = document.createElement('button')
-        playBtn.id = 'play' + i
-        playBtn.value = i
-        btns.push(`play${i}`)
-        playBtn.className = 'play_button'
-        playBtn.innerHTML = '\uf04b'
-        buttonsCont.appendChild(playBtn)
-      }
+      removeBtn.innerHTML = CROSS_SVG
       buttonsCont.appendChild(removeBtn)
-      el.appendChild(title)
       el.appendChild(buttonsCont)
+
       playlistElement.appendChild(el)
     }
     document.getElementById('playlist').innerHTML = playlistElement.innerHTML
@@ -59,7 +61,9 @@ const refreshList = (playlist) => {
 
 const playIndex = async (e) => {
   e.target.disabled = true
-  await fetch(`${PLAY_INDEX_URL}${e.target.value}`)
+  const id = e.target.dataset?.index || false
+  if (!id) return
+  await fetch(`${PLAY_INDEX_URL}${id}`)
     .then((r) => r.json())
     .then((r) => {
       if (r.error === OK) refreshPlaylist()
@@ -73,10 +77,9 @@ const refreshPlaylist = async () => {
     .then(refreshList)
 }
 
-const control = async (e) => {
-  console.log(`action: ${e.target.value}`)
+const control = async (id) => {
   for (const b of controlButtons) b.disabled = true
-  await fetch(`${CONTROL_URL}${e.target.value}`)
+  await fetch(`${CONTROL_URL}${id}`)
     .then((r) => r.json())
     .then((r) => {
       if (r.error === OK) refreshPlaylist()
@@ -86,7 +89,7 @@ const control = async (e) => {
 
 updButton.addEventListener('click', refreshPlaylist)
 for (const e of controlButtons) {
-  e.addEventListener('click', control)
+  e.addEventListener('click', () => control(e.id))
 }
 
 window.onload = async function () {
