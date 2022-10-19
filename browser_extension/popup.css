@@ -1,0 +1,98 @@
+:root {
+  --mpv_main_bg: #45194d;
+  --mpv_main_bgl: #671b68;
+  --mpv_main_bgd: #35103b;
+  --mpv_main_bgd10: #35103b10;
+  --mpv_main_bgd50: #35103ba0;
+  --mpv_main_fg: #bcb7be;
+  --transparent: #00000000;
+  --redd: #b00;
+}
+body {
+  min-width: 20em;
+  max-width: 30em;
+}
+div.pl_popup_top,
+div#playlist,
+div.pl_item,
+div.pl_item_title,
+div.pl_item_thumb,
+div.pl_item_buttons {
+  display: flex;
+  margin: 0;
+}
+div.pl_popup_top {
+  gap: 1rem;
+}
+div#playlist {
+  flex-direction: column;
+  margin: 10px 0;
+  padding: 0 10px;
+}
+div.pl_item {
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: row;
+  overflow: hidden;
+  margin-bottom: 10px;
+  background-color: var(--mpv_main_bgd10);
+}
+div.pl_item:hover {
+  cursor: pointer;
+  background-color: var(--mpv_main_bgd50);
+}
+div.pl_item_current {
+  border-right: 5px solid var(--mpv_main_bg);
+}
+div.pl_item_title {
+  display: block;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  padding: 10px;
+  font-size: 14pt;
+}
+div.pl_item_buttons {
+  padding: 0;
+  flex-direction: column;
+  height: 60px;
+}
+#upd_btn,
+.control_button {
+  padding: 0;
+  border: none;
+  background-color: var(--transparent);
+}
+#upd_btn svg,
+.control_button svg {
+  transition: all 100ms ease-in;
+}
+#upd_btn svg,
+.control_button svg {
+  scale: 0.8;
+}
+#upd_btn:hover svg,
+.control_button:hover svg {
+  fill: var(--mpv_main_bgl);
+  stroke: var(--mpv_main_bgl) !important;
+  background-color: var(--mpv_main_bgd10);
+  scale: 0.95;
+}
+button:disabled svg {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+button.remove_button {
+  padding: 5px;
+  border: none;
+  background-color: var(--transparent);
+}
+button.remove_button svg {
+  transition: all 100ms ease-in;
+}
+button.remove_button:hover svg {
+  stroke: var(--redd);
+  fill: var(--redd);
+  scale: 1.05;
+  stroke-width: 1.25;
+}
