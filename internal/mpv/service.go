@@ -50,6 +50,26 @@ func NewService(notify bool) Service {
 	}
 }
 
+func (s *Service) PlayIndexCtl(index string) error {
+	conn, err := s.getConn()
+	if err != nil {
+		return err
+	}
+	go func() {
+		var resp DefaultResponse
+		if !decodeData(&resp, conn) {
+			msg := "can't read play index response"
+			s.Logger.Println(msg)
+			return
+		}
+		s.Logger.Printf("play index response: %#+v", resp)
+	}()
+
+	sendCommand(playIndexCommand(index), conn)
+	time.Sleep(1e9)
+	return err
+}
+
 func (s *Service) PlayIndex(index string, w *http.ResponseWriter) error {
 	conn, err := s.getConn()
 	if err != nil {
@@ -136,6 +156,18 @@ func (s *Service) AppendVideo(url string, w *http.ResponseWriter) error {
 	return err
 }
 
+func (s *Service) GetPlaylistString() string {
+	if err := s.requestPlaylist(); err != nil {
+		s.Logger.Printf("[Service.GetPlaylist]playlist request error: %s", err.Error())
+		return ""
+	}
+	response := ""
+	for i, v := range currentPlaylist {
+		response += fmt.Sprintf("%s\000info\037%d\n", v.Title, i)
+	}
+	return response
+}
+
 func (s *Service) GetPlaylist(w *http.ResponseWriter) {
 	if err := s.requestPlaylist(); err != nil {
 		s.Logger.Printf("[Service.GetPlaylist]playlist request error: %s", err.Error())
@@ -145,6 +177,10 @@ func (s *Service) GetPlaylist(w *http.ResponseWriter) {
 	if err != nil {
 		s.Logger.Printf("can't encode playlist: %s", err.Error())
 	}
+}
+
+func (s *Service) GetPlaylistLength() int {
+	return len(currentPlaylist)
 }
 
 func (s *Service) requestPlaylist() error {

@@ -37,7 +37,7 @@ var (
 
 func init() {
 	flag.StringVar(&port, "p", "5000", "port")
-	flag.BoolVar(&notify, "n", false, "notifications")
+	flag.BoolVar(&notify, "n", false, "send notifications")
 
 	var runMpvCmd string
 	flag.StringVar(&runMpvCmd, "m", mpv.DEFAULT_CMD, "mpv command")
@@ -54,7 +54,7 @@ func main() {
 	if err := c1.Start(); err != nil {
 		log.Fatal()
 	}
-	time.Sleep(1 * time.Second)
+	time.Sleep(3 * time.Second)
 
 	service = mpv.NewService(notify)
 	logger.Println("service is starting...")
@@ -67,6 +67,7 @@ func main() {
 	router.Handle("/play", playIndex())
 	router.Handle("/control", control())
 	router.Handle("/healthz", healthz())
+	router.Handle("/rofi", getPlaylistRofi())
 
 	// nextRequestID := func() string {
 	// 	return fmt.Sprintf("%d", time.Now().Unix())
@@ -109,7 +110,7 @@ func main() {
 		if err := c1.Wait(); err != nil {
 			logger.Fatal(err)
 		}
-		logger.Println("mpv process successfully exieted")
+		logger.Println("mpv process successfully exited")
 		os.Exit(0)
 	}()
 
@@ -143,6 +144,35 @@ func appendVid() http.Handler {
 func getPlaylist() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		service.GetPlaylist(&w)
+	})
+}
+
+func getPlaylistRofi() http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.UserAgent() != "rofi" {
+			w.WriteHeader(http.StatusMethodNotAllowed)
+			return
+		}
+
+		if index, ok := r.URL.Query()["index"]; ok {
+			if i, err := strconv.Atoi(index[0]); err == nil &&
+				service.GetPlaylistLength() > i &&
+				i >= 0 {
+				if err := service.PlayIndexCtl(index[0]); err != nil {
+					w.WriteHeader(http.StatusBadRequest)
+				}
+				return
+			}
+			w.WriteHeader(400)
+			w.Write([]byte("bad index"))
+			return
+		}
+
+		playlist := service.GetPlaylistString()
+		w.WriteHeader(200)
+		if _, err := w.Write([]byte(playlist)); err != nil {
+			service.Logger.Printf("[Service.GetPlaylistRofi]write response error: %s", err.Error())
+		}
 	})
 }
 
