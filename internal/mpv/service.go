@@ -11,6 +11,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strconv"
+	"sync"
 	"time"
 
 	"github.com/su55y/yt2mpv/internal/ytdl"
@@ -19,6 +20,7 @@ import (
 type Service struct {
 	path    string
 	notify  bool
+	mu      sync.Mutex
 	Decoder *json.Decoder
 	Logger  *log.Logger
 }
@@ -148,7 +150,10 @@ func (s *Service) AppendVideo(url string, w *http.ResponseWriter) error {
 			s.sendNotify(fmt.Sprintf("vid #%d just added", resp.Data.PlEntryId))
 		}
 		err = json.NewEncoder(*w).Encode(&resp)
-		go updatePlaylistItem(url)
+		var wg sync.WaitGroup
+		wg.Add(1)
+		go s.updatePlaylistItem(url)
+		wg.Wait()
 	}()
 	sendCommand(appendCommand(url), conn)
 
@@ -231,7 +236,9 @@ func sendCommand[T MpvCommands](c *T, conn net.Conn) error {
 	return nil
 }
 
-func updatePlaylistItem(url string) {
+func (s *Service) updatePlaylistItem(url string) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
 	plItem := PlaylistItem{
 		Filename: url,
 	}

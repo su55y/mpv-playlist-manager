@@ -15,6 +15,7 @@ import (
 	"strconv"
 	"strings"
 	"sync/atomic"
+	"syscall"
 	"time"
 
 	"github.com/su55y/yt2mpv/internal/mpv"
@@ -48,6 +49,9 @@ func init() {
 }
 
 func main() {
+	if err := syscall.Mknod("/tmp/mpv.sock", syscall.S_IFSOCK|0666, 0); err != nil {
+		log.Fatal(err)
+	}
 	logger := log.New(os.Stdout, "main: ", log.LstdFlags)
 	logger.Printf("start %q", runMpvArgs)
 	c1 := exec.Command("mpv", runMpvArgs[1:]...)
