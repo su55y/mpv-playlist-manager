@@ -115,6 +115,9 @@ func main() {
 			logger.Fatal(err)
 		}
 		logger.Println("mpv process successfully exited")
+		if err := os.Remove("/tmp/mpv.sock"); err != nil {
+			logger.Fatal(err)
+		}
 		os.Exit(0)
 	}()
 
